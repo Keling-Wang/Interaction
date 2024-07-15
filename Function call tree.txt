@@ -1,0 +1,29 @@
+simulationInteractionIPW # main function
+  |
+  buildDataSim # build simulation dataset
+  |  |
+  |  generateContiVars # generate continuous variables
+  |
+  ipwEstimator_binaryA
+  |
+  outcomeRegEstimator
+  |
+  drEstimator_binaryA
+  |  |
+  |  tmle::tmle
+  |
+  balanceCheck
+  |  |
+  |  cobalt::bal_tab
+  |
+  weightImputationOR # impute (implied) weight for outcome regression
+  |  |
+  |  lmw::lmw
+  |
+  ipwEstimator_continuousA
+  |  |
+  |  getProbDensA # get probability density for A
+  |
+  drEstimator_continuousA
+    |
+    NA (not implemented)

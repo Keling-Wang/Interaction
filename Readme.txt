@@ -1,13 +1,46 @@
 Files: 
- SimulationInteractionIPW.R: main function. contains main function and a summary() method for the output.
  __main__.R: interface. You can assign parameters and run simulations in this R script.
+ BalanceCheck.R: calculate balance scores
+   function: balanceCheck, weightImputationOR
+ BuildDataSim.R: function for generating the simulation dataset. 
+   function: buildDataSim
+ Estimators.R: IPW, OR, and DR estimators
+   function: ipwEstimator_binaryA, ipwEstimator_continuousA, outcomeRegEstimator, drEstimator_binaryA
+ GenerateContiVars.R: generate continuous variables using given parameters and distributions.
+   function: generateContiVars
+ GetProbDensA.R: get probability density of treatment for IPW continuous A.
+   function: getProbDensA
+ SimulationInteractionIPW.R: main function. contains main function and a summary() method for the output.
+   functions: simulationInteractionIPW, summary.BiasSimulation, print.summary.BiasSimulation, ...
 
-Mainly used formulars: 
- Simulation of A: 
-	OR(C1 or C2 or Intr) = RR * (1 - A_prob0) / (1 - RR * A_prob0)
-	logit(A) = logit(A_0) + sum(log(OR)s)
-	A = rbinom(size, 1, expit(logit(A))
-	
- Simulation of Y: 
-	mean(Y) = mean_Y0 + E_A_Y * A + E_C1_Y * C1 + E_C2_Y * C2
-	Y = rnorm(size, mean(Y), sqrt(var_Y))
+Function call tree in simulationInteractionIPW: 
+
+simulationInteractionIPW # main function
+  |
+  buildDataSim # build simulation dataset
+  |  |
+  |  generateContiVars # generate continuous variables
+  |
+  ipwEstimator_binaryA
+  |
+  outcomeRegEstimator
+  |
+  drEstimator_binaryA
+  |  |
+  |  tmle::tmle
+  |
+  balanceCheck
+  |  |
+  |  cobalt::bal_tab
+  |
+  weightImputationOR # impute (implied) weight for outcome regression
+  |  |
+  |  lmw::lmw
+  |
+  ipwEstimator_continuousA
+  |  |
+  |  getProbDensA # get probability density for A
+  |
+  drEstimator_continuousA
+    |
+    NA (not implemented)
